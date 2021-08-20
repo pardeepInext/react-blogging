@@ -4,14 +4,15 @@ import Footer from "./Footer";
 import { Switch, Route, useLocation, Redirect } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import PrivateRoute from '../components/PrivateRoute';
+import Quill from 'quill';
 /* views */
-//import Home from "../views/Home";
-const Home = React.lazy(() => import("../views/Home"));
+import Home from "../views/Home";
+//const Home = React.lazy(() => import("../views/Home"));
 import Blog from "../views/Blog";
-import Categories from "../views/Categories";
-import Contact from "../views/Contact";
+import Notification from "../views/Notification";
 import Login from "../views/Login";
 import Register from "../views/Register";
+import Add from '../views/Add';
 
 const titleCase = (str) => {
     let title = str.length > 1 ? str.substring(1) : "parsa";
@@ -44,13 +45,13 @@ const App = () => {
                             </Route>
                             <Route path="/blog/:id" component={Blog} exact />
                             <Route
-                                path="/categories"
+                                path="/notification"
                                 exact
                             >
-                                {currentUser ? <Categories /> : <Redirect to={'/login'} />}
+                                {currentUser ? <Notification /> : <Redirect to={'/login'} />}
                             </Route>
-                            <Route path="/contact" exact >
-                                {currentUser ? <Contact /> : <Redirect to={'/login'} />}
+                            <Route path="/add" exact >
+                                {currentUser ? <Add /> : <Redirect to={'/login'} />}
                             </Route>
 
                             <Route path="/login" exact >

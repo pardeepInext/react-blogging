@@ -9,16 +9,12 @@ const Header = () => {
             link: "/",
         },
         {
-            menuClass: "fas fa-bell",
-            link: "/about",
+            menuClass: "fas fa-bell ",
+            link: "/notification",
         },
         {
-            menuClass: "fab fa-blogger-b",
-            link: "/categories",
-        },
-        {
-            menuClass: "fab fa-facebook-messenger",
-            link: "/contact",
+            menuClass: "fas fa-plus",
+            link: "/add",
         },
     ]);
     return (

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Categories = () => {
+const Notification = () => {
     return (
         <h1>Categories</h1>
     )
 }
 
-export default Categories
+export default Notification

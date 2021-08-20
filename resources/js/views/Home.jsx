@@ -4,6 +4,7 @@ import axios from "../axios";
 import Blog from "../components/Blog";
 import Category from "../components/Category";
 import { useContegories, useFetchBlog } from "../APIHooks";
+import ReactHtmlParser from 'react-html-parser';
 const Home = () => {
     Block.init({ svgColor: "#fd7e14" });
     const [page, setpage] = useState(1);
@@ -46,9 +47,7 @@ const Home = () => {
         },
     ];
 
-    isBlogFetch
-        ? Block.hourglass("#blog-listing")
-        : Block.remove("#blog-listing");
+    const [html] = useState("<h1>Hello</h1><ul><li>Hello</li><li>Hello 1</li><li>Hello 2</li></ul>");
 
     const Paginate = () => {
         const html = [];
@@ -56,9 +55,8 @@ const Home = () => {
             html.push(
                 <li key={index} className="page-item">
                     <a
-                        className={`page-link ${
-                            currentPage == index ? "active" : ""
-                        }`}
+                        className={`page-link ${currentPage == index ? "active" : ""
+                            }`}
                         onClick={() => {
                             setpage(index);
                             console.log(page);
@@ -71,7 +69,9 @@ const Home = () => {
 
         return html;
     };
-
+    isBlogFetch
+        ? Block.hourglass("#blog-listing")
+        : Block.remove("#blog-listing");
     return (
         <>
             <div className="container-fluid p-sm-0 category" id="category">

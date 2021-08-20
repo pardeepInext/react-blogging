@@ -57,19 +57,15 @@ const Blog = () => {
                             <div className="widget">
                                 <h6 className="mb-4">LATEST POST</h6>
                                 {blog.related_post ? (
-                                    blog.related_post.lenght < 0 ? (
+                                    blog.related_post.length > 0 ?
                                         blog.related_post.map((relatedPost) => (
                                             <RelatedPost
                                                 key={relatedPost.id}
                                                 {...relatedPost}
                                             />
                                         ))
-                                    ) : (
-                                        <h5>No Related Post Available</h5>
-                                    )
-                                ) : (
-                                    ""
-                                )}
+                                        : <h5>No Related Post Available</h5>)
+                                    : ""}
                             </div>
                         </div>
                     </div>
