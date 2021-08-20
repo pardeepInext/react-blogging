@@ -6,11 +6,45 @@ import Category from "../components/Category";
 import { useContegories, useFetchBlog } from "../APIHooks";
 const Home = () => {
     Block.init({ svgColor: "#fd7e14" });
-    const { categories, isCatLoading } = useContegories();
     const [page, setpage] = useState(1);
     const { blogs, lastPage, currentPage, isBlogFetch } = useFetchBlog(page);
-
-    isCatLoading ? Block.hourglass("#category") : Block.remove("#category");
+    const categories = [
+        {
+            id: 1,
+            name: "Nature",
+            figure: "cat-01.jpg",
+        },
+        {
+            id: 2,
+            name: "Lifestyle",
+            figure: "cat-02.jpg",
+        },
+        {
+            id: 3,
+            name: "Artical",
+            figure: "cat-03.jpg",
+        },
+        {
+            id: 4,
+            name: "Fashion",
+            figure: "cat-04.jpg",
+        },
+        {
+            id: 5,
+            name: "Nature",
+            figure: "cat-05.jpg",
+        },
+        {
+            id: 6,
+            name: "Philosophy",
+            figure: "cat-06.jpg",
+        },
+        {
+            id: 7,
+            name: "Digital",
+            figure: "cat-07.jpg",
+        },
+    ];
 
     isBlogFetch
         ? Block.hourglass("#blog-listing")

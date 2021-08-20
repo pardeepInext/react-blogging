@@ -21,7 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'image',
+        'provider_id'
     ];
+
+    protected $appends = ['profile_image'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -31,6 +35,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'image',
     ];
 
     /**
@@ -41,4 +46,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    function getProfileImageAttribute()
+    {
+        return $this->provider_id ? $this->image : ($this->img != "" ?  asset("image/user/$this->image") : asset("images/user.png"));
+    }
 }

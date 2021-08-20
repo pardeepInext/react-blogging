@@ -38,7 +38,7 @@
 
 .fade-enter.fade-enter-active {
     opacity: 1;
-    transition: opacity 0.8s ease-in;
+    transition: opacity 0.9s ease-in;
 }
 
 #blog-listing div:nth-child(2n) article img {
@@ -94,7 +94,9 @@ body {
     background-color: #3b5998;
     color: #fff;
     font-size: 18px;
-    padding-top: 5px;
+    padding: 0%;
+    outline: none;
+    border: none;
     border-radius: 50%;
     width: 35px;
     height: 35px;
