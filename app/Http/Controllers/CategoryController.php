@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -18,15 +19,6 @@ class CategoryController extends Controller
         return CategoryResource::collection(Category::get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,16 +26,12 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
+     * @ret
      */
     public function show(Category $category)
     {

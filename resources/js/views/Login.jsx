@@ -10,6 +10,7 @@ const Login = (props) => {
     const [isLogin, setisLogin] = useState(false);
     const [error, seterror] = useState({})
     let history = useHistory();
+
     const socialLogin = async (user) => {
         setisLogin(true);
         await axios.post(`socialauth`, user)

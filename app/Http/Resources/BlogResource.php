@@ -21,7 +21,8 @@ class BlogResource extends JsonResource
             'discription' => $this->discription,
             'figure' => $this->figure,
             'category'  => new CategoryResource($this->category),
-            'blog_date' => $this->blog_date
+            'blog_date' => $this->blog_date,
+            'likes' => $this->likes->count()
         ];
     }
 }

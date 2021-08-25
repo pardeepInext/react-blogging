@@ -11483,6 +11483,12 @@ a {
   background-color: #1a237e;
 }
 
+.form-control:focus {
+  border: 0px;
+  border-bottom: 1px solid #fd7e14;
+  border-radius: 0;
+}
+
 @media screen and (max-width: 991px) {
   .logo {
     margin-left: 0px;

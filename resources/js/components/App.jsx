@@ -4,7 +4,8 @@ import Footer from "./Footer";
 import { Switch, Route, useLocation, Redirect } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import PrivateRoute from '../components/PrivateRoute';
-import Quill from 'quill';
+
+
 /* views */
 import Home from "../views/Home";
 //const Home = React.lazy(() => import("../views/Home"));
@@ -29,6 +30,10 @@ const App = () => {
         document.title = titleCase(location.pathname);
         scrollTo(0, 0);
     }, [location]);
+
+    let id = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).id;
+
+    Echo.private(`like.${id}`).notification((notification) => console.log("hello"));
     return (
         <>
             <Header />

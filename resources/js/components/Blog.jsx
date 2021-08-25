@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from '../axios';
 const Blog = (props) => {
-    const { category, discription, blog_date, figure, id, title, blogClass } =
+    const { category, discription, blog_date, figure, id, title, blogClass, likes_count, like_status_count } =
         props;
+
+    const [isLike, setIsLike] = useState(like_status_count);
+    const [likes, setlikes] = useState(likes_count);
+    const [isLiking, setisLiking] = useState(false);
+    let user_id = JSON.parse(localStorage.getItem('user')).id;
+
+    const toggleLike = async () => {
+        setisLiking(true);
+        await axios.post('likes', { user_id: user_id, blog_id: id })
+            .then(res => {
+                setisLiking(false);
+                setIsLike(!isLike);
+                setlikes(res.data.likesCount);
+            })
+    }
 
     return (
         <div className="col-12 mb-100">
@@ -22,6 +38,10 @@ const Blog = (props) => {
                         <li className="list-inline-item">
                             <i className="fas fa-tags me-2"></i>
                             <span className="eta">{category.name}</span>
+                        </li>
+                        <li className="list-inline-item">
+                            {isLiking ? <i className="fas fa-spinner fa-spin me-2" style={{ color: 'red' }}></i> : <i className={`${isLike ? `fas fa-heart` : `far fa-heart`} me-2 `} style={{ color: 'red', cursor: 'pointer' }} onClick={toggleLike}></i>}
+                            <span className="eta">{likes}</span>
                         </li>
                     </ul>
                     <h4 className="mb-4">

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Block } from "notiflix";
+import { Block, Notify } from "notiflix";
 import axios from "../axios";
 import Blog from "../components/Blog";
 import Category from "../components/Category";
-import { useContegories, useFetchBlog } from "../APIHooks";
+import { useFetchBlog, useCustom } from "../APIHooks";
 import ReactHtmlParser from 'react-html-parser';
 const Home = () => {
     Block.init({ svgColor: "#fd7e14" });
-    const [page, setpage] = useState(1);
-    const { blogs, lastPage, currentPage, isBlogFetch } = useFetchBlog(page);
+    let id = JSON.parse(localStorage.getItem('user')).id;
+    const [data, setData] = useState({ currentPage: 1, lastPage: 1, isBlogFetch: false });
+    const [blogs, setblogs] = useState([]);
+    console.log(data);
     const categories = [
         {
             id: 1,
@@ -47,20 +49,34 @@ const Home = () => {
         },
     ];
 
-    const [html] = useState("<h1>Hello</h1><ul><li>Hello</li><li>Hello 1</li><li>Hello 2</li></ul>");
+    const fetchPost = async () => {
+        setData({ ...data, isBlogFetch: true });
+        await axios.get(`/blogs?page=${data.currentPage}&current_user=${id}`)
+            .then(res => {
+                setblogs(res.data.data);
+                setData({ isBlogFetch: false, currentPage: res.data.current_page, lastPage: res.data.last_page })
+            })
+            .catch(err => {
+                setData({ isBlogFetch: false });
+                Notify.warning(`Blog API has errors ${err.message}`);
+            });
+
+    }
+
+    useEffect(() => {
+        fetchPost();
+    }, [data.currentPage]);
+
 
     const Paginate = () => {
         const html = [];
-        for (let index = 1; index <= lastPage; index++)
+        for (let index = 1; index <= data.lastPage; index++)
             html.push(
                 <li key={index} className="page-item">
                     <a
-                        className={`page-link ${currentPage == index ? "active" : ""
+                        className={`page-link ${data.currentPage == index ? "active" : ""
                             }`}
-                        onClick={() => {
-                            setpage(index);
-                            console.log(page);
-                        }}
+                        onClick={() => setData({ ...data, currentPage: index })}
                     >
                         {index}
                     </a>
@@ -69,9 +85,7 @@ const Home = () => {
 
         return html;
     };
-    isBlogFetch
-        ? Block.hourglass("#blog-listing")
-        : Block.remove("#blog-listing");
+
     return (
         <>
             <div className="container-fluid p-sm-0 category" id="category">
@@ -85,8 +99,8 @@ const Home = () => {
             </div>
             <section className="section">
                 <div className="container">
-                    <div className="row" id="blog-listing">
-                        {blogs.map((blog, key) => (
+                    <div className="row blog-listing" id="blog-listing">
+                        {data.isBlogFetch ? "loading..." : blogs.map((blog, key) => (
                             <Blog
                                 {...blog}
                                 key={blog.id}

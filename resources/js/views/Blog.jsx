@@ -8,7 +8,7 @@ const Blog = () => {
     const { id } = useParams();
     const fetchBlog = async () => {
         Block.arrows("#blog-details");
-        await axios.get(`/blog/${id}`).then((res) => {
+        await axios.get(`/blogs/${id}`).then((res) => {
             setblog(res.data);
             Block.remove("#blog-details");
         });
@@ -49,13 +49,11 @@ const Blog = () => {
                                 alt="post-thumb"
                                 className="w-100 img-fluid mb-4"
                             />
-                            <div className="content">
-                                <p>{blog.discription}</p>
-                            </div>
+                            <div className="content pb-1" dangerouslySetInnerHTML={{ __html: blog.discription }}></div>
                         </div>
                         <div className="col-lg-4">
                             <div className="widget">
-                                <h6 className="mb-4">LATEST POST</h6>
+                                <h6 className="mb-4">Related  Post</h6>
                                 {blog.related_post ? (
                                     blog.related_post.length > 0 ?
                                         blog.related_post.map((relatedPost) => (

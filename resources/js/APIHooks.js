@@ -24,19 +24,18 @@ const useContegories = () => {
 }
 
 const useFetchBlog = (page) => {
-    const [blogs, setBlogs] = useState([]);
-    const [lastPage, setLastPage] = useState();
-    const [currentPage, setcurrentPage] = useState(page)
-    const [isBlogFetch, setisBlogFetch] = useState(false);
+    // const [blogs, setBlogs] = useState([]);
+    // const [lastPage, setLastPage] = useState();
+    // const [currentPage, setcurrentPage] = useState(0);
+    // const [isBlogFetch, setisBlogFetch] = useState(false);
+    let id = JSON.parse(localStorage.getItem('user')).id;
+    const [data, setData] = useState({ currentPage: 1, lastPage: 1, blogs: [], isBlogFetch: false })
 
     const fetchPost = async () => {
-        setisBlogFetch(true);
-        await axios.get(`/blogs?page=${currentPage}`)
+        setData({ ...data, isBlogFetch: true });
+        await axios.get(`/blogs?page=${page}&current_user=${id}`)
             .then(res => {
-                setBlogs(res.data.data);
-                setisBlogFetch(false);
-                setLastPage(res.data.meta.last_page);
-                setcurrentPage(res.data.meta.current_page);
+                setData({ ...data, blogs: res.data.data, isBlogFetch: false, currentPage: res.data.current_page, lastPage: res.data.last_page })
             })
             .catch(err => {
                 setisBlogFetch(false);
@@ -45,12 +44,22 @@ const useFetchBlog = (page) => {
 
     }
 
-    useEffect(() => { fetchPost() }, [currentPage])
-
-    return { blogs, lastPage, currentPage, isBlogFetch };
+    useEffect(() => { fetchPost() }, [page])
+    console.log(data);
+    return data;
 }
 
 
+const useCustom = (counter) => {
+    const [newCounter, setnewCounter] = useState(counter);
+
+    useEffect(() => {
+        setnewCounter(`new Counter is ${counter}`);
+    }, [counter])
+
+    return newCounter;
+
+}
 
 
-export { useContegories, useFetchBlog }
+export { useContegories, useFetchBlog, useCustom }

@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->provider_id ? $this->image : ($this->img != "" ?  asset("image/user/$this->image") : asset("images/user.png"));
     }
+
+    public function receivesBroadcastNotificationsOn()
+    {
+        return 'users.' . $this->id;
+    }
 }
