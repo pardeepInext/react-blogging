@@ -4,13 +4,12 @@ import axios from "../axios";
 import Blog from "../components/Blog";
 import Category from "../components/Category";
 import { useFetchBlog, useCustom } from "../APIHooks";
-import ReactHtmlParser from 'react-html-parser';
+
 const Home = () => {
     Block.init({ svgColor: "#fd7e14" });
     let id = JSON.parse(localStorage.getItem('user')).id;
     const [data, setData] = useState({ currentPage: 1, lastPage: 1, isBlogFetch: false });
     const [blogs, setblogs] = useState([]);
-    console.log(data);
     const categories = [
         {
             id: 1,
@@ -66,7 +65,6 @@ const Home = () => {
     useEffect(() => {
         fetchPost();
     }, [data.currentPage]);
-
 
     const Paginate = () => {
         const html = [];

@@ -4,13 +4,13 @@ import Footer from "./Footer";
 import { Switch, Route, useLocation, Redirect } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import PrivateRoute from '../components/PrivateRoute';
-
+import axios from '../axios';
 
 /* views */
-import Home from "../views/Home";
-//const Home = React.lazy(() => import("../views/Home"));
+// import Home from "../views/Home";
+const Home = React.lazy(() => import("../views/Home"));
 import Blog from "../views/Blog";
-import Notification from "../views/Notification";
+import Notifications from "../views/Notifications";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Add from '../views/Add';
@@ -25,18 +25,44 @@ const App = () => {
     let currentKey = location.pathname.split("/")[1] || "/";
     const [currentUser, setcurrentUser] = useState(localStorage.getItem('user'))
     const changeUser = (user) => setcurrentUser(user);
+    const [unreadCount, setunreadCount] = useState(0);
+    const [notifications, setnotifications] = useState([]);
+    const [isNotificationLoading, setisNotificationLoading] = useState(false);
+    const [newNotification, setnewNotification] = useState(0);
     /* changing title for routes */
+    let id = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).id;
     useEffect(() => {
         document.title = titleCase(location.pathname);
         scrollTo(0, 0);
     }, [location]);
 
-    let id = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).id;
+    const fetchNotifications = async () => {
+        setisNotificationLoading(true);
+        await axios.get(`notification/${id}`)
+            .then(res => {
+                setisNotificationLoading(false);
+                setnotifications(res.data.notifications);
+                setunreadCount(res.data.unreadcount);
+            })
+            .catch();
+    }
 
-    Echo.private(`like.${id}`).notification((notification) => console.log("hello"));
+
+    useEffect(() => { localStorage.getItem('user') && fetchNotifications() }, []);
+
+
+    useEffect(() => {
+
+        Echo.private(`like.${id}`)
+            .notification((notification) => {
+                setnewNotification(newNotification + 1);
+            });
+    }, [newNotification, notifications]);
+
     return (
         <>
-            <Header />
+
+            <Header unreadCount={unreadCount} newNotification={newNotification} />
             <Suspense fallback={<div>Loading...</div>}>
                 <TransitionGroup>
                     <CSSTransition
@@ -48,12 +74,12 @@ const App = () => {
                             <Route path="/" exact >
                                 {currentUser ? <Home /> : <Redirect to={'/login'} />}
                             </Route>
-                            <Route path="/blog/:id" component={Blog} exact />
+                            <Route path="   :id" component={Blog} exact />
                             <Route
                                 path="/notification"
                                 exact
                             >
-                                {currentUser ? <Notification /> : <Redirect to={'/login'} />}
+                                {currentUser ? <Notifications notifications={notifications} /> : <Redirect to={'/login'} />}
                             </Route>
                             <Route path="/add" exact >
                                 {currentUser ? <Add /> : <Redirect to={'/login'} />}

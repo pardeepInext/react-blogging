@@ -20,31 +20,31 @@ if (typeof token === "string") {
         key: process.env.MIX_PUSHER_APP_KEY,
         cluster: process.env.MIX_PUSHER_APP_CLUSTER,
         forceTLS: true,
-        auth: {
-            headers: {
-                Authorization: 'Bearer ' + token
-            },
-        }
-        // authorizer: (channel, options) => {
-        //     return {
-        //         authorize: (socketId, callback) => {
-        //             axios.head('/broadcasting/auth', {
-        //                 socket_id: socketId,
-        //                 channel_name: channel.name
-        //             }, {
-        //                 headers: {
-        //                     'Authorization': `Bearer ${token}`
-        //                 }
-        //             })
-        //                 .then(response => {
-        //                     callback(false, response.data);
-        //                 })
-        //                 .catch(error => {
-        //                     callback(true, error);
-        //                 });
-        //         }
-        //     };
-        // },
+        // auth: {
+        //     headers: {
+        //         Authorization: 'Bearer ' + token
+        //     },
+        // }
+        authorizer: (channel, options) => {
+            return {
+                authorize: (socketId, callback) => {
+                    axios.post('/broadcasting/auth', {
+                        socket_id: socketId,
+                        channel_name: channel.name
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                        .then(response => {
+                            callback(false, response.data);
+                        })
+                        .catch(error => {
+                            callback(true, error);
+                        });
+                }
+            };
+        },
     });
 } else {
     window.Echo = null;

@@ -19,8 +19,8 @@ class LikeController extends Controller
             'blog_id' => 'required'
         ]);
 
-        $blog = Blog::find($request->blog_id);
-        $user = User::find($request->user_id);
+        $blog = Blog::select('id', 'title', 'user_id')->find($request->blog_id);
+        $user = User::select('id', 'name', 'image')->find($request->user_id);
 
         if ($validator->fails()) return response(['success' => false, 'errors' => $validator->errors()]);
         $like = Like::where('blog_id', $request->blog_id)->first();

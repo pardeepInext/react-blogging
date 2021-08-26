@@ -11489,6 +11489,19 @@ a {
   border-radius: 0;
 }
 
+.notification-alert {
+  color: black;
+  background: #fdefe6;
+  border: #fdefe6;
+}
+
+.notification-img {
+  width: 100px;
+  height: 100px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 @media screen and (max-width: 991px) {
   .logo {
     margin-left: 0px;

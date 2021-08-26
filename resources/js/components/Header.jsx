@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { NavLink } from "react-router-dom";
 import logo from "../../images/logo.png";
-const Header = () => {
+const Header = (props) => {
     const [menus] = useState([
         {
             menuClass: "fas fa-home",
@@ -42,7 +42,6 @@ const Header = () => {
                         <ul className="navbar-nav ml-auto">
                             {menus.map((menu, key) => (
                                 <li className="nav-item" key={key}>
-                                    {/* <a className="nav-link text-uppercase text-dark" href={menu.link}>{menu.name}</a> */}
                                     <NavLink
                                         className="nav-link text-uppercase text-dark"
                                         exact
@@ -53,9 +52,9 @@ const Header = () => {
                                         <i
                                             className={`${menu.menuClass} position-relative`}
                                         >
-                                            {/* <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info link-notification">
-                                                4
-                                            </span> */}
+                                            {menu.link == "/notification" && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info link-notification">
+                                                {props.unreadCount + props.newNotification}
+                                            </span>}
                                         </i>
                                     </NavLink>
                                 </li>

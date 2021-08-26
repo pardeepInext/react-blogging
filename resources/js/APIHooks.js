@@ -49,6 +49,11 @@ const useFetchBlog = (page) => {
     return data;
 }
 
+const useForceUpdate = () => {
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => ++value); // update the state to force render
+}
+
 
 const useCustom = (counter) => {
     const [newCounter, setnewCounter] = useState(counter);
@@ -62,4 +67,4 @@ const useCustom = (counter) => {
 }
 
 
-export { useContegories, useFetchBlog, useCustom }
+export { useContegories, useFetchBlog, useCustom, useForceUpdate }
