@@ -28,10 +28,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/categories', [CategoryController::class, 'index']);
 });
 
 
+Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/socialauth', [AuthController::class, 'socialAuth']);

@@ -12,7 +12,7 @@ const Category = (props) => {
             <article className="card bg-dark text-center text-white border-0 rounded-0">
                 <img
                     className="card-img rounded-0 img-fluid w-100"
-                    src={`${asset}images/categories/${figure}`}
+                    src={figure}
                     alt="post-thumb"
                     style={{ height: "374px" }}
                 />

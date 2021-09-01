@@ -12,7 +12,7 @@ import Echo from 'laravel-echo'
 window.Pusher = require('pusher-js');
 import axios from './axios';
 let token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token : null;
-let id = JSON.parse(localStorage.getItem('user')).id;
+
 if (typeof token === "string") {
 
     window.Echo = new Echo({

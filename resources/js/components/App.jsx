@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Switch, Route, useLocation, Redirect } from "react-router-dom";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import PrivateRoute from '../components/PrivateRoute';
+import { fetchCategory } from '../slices/categorySlice';
 import axios from '../axios';
 
 /* views */
@@ -14,7 +14,7 @@ import Notifications from "../views/Notifications";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Add from '../views/Add';
-
+import { useSelector, useDispatch } from 'react-redux';
 const titleCase = (str) => {
     let title = str.length > 1 ? str.substring(1) : "parsa";
     return title.charAt(0).toUpperCase() + title.slice(1);
@@ -22,7 +22,9 @@ const titleCase = (str) => {
 
 const App = () => {
     let location = useLocation();
-    let currentKey = location.pathname.split("/")[1] || "/";
+    const dispatch = useDispatch();
+    const categoyStatus = useSelector(state => state.category.status)
+    // let currentKey = location.pathname.split("/")[1] || "/";
     const [currentUser, setcurrentUser] = useState(localStorage.getItem('user'))
     const changeUser = (user) => setcurrentUser(user);
     const [unreadCount, setunreadCount] = useState(0);
@@ -35,6 +37,10 @@ const App = () => {
         document.title = titleCase(location.pathname);
         scrollTo(0, 0);
     }, [location]);
+
+    useEffect(() => {
+        if (categoyStatus == 'idle') dispatch(fetchCategory());
+    }, [dispatch, categoyStatus]);
 
     const fetchNotifications = async () => {
         setisNotificationLoading(true);
@@ -51,13 +57,13 @@ const App = () => {
     useEffect(() => { localStorage.getItem('user') && fetchNotifications() }, []);
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        Echo.private(`like.${id}`)
-            .notification((notification) => {
-                setnewNotification(newNotification + 1);
-            });
-    }, [newNotification, notifications]);
+    //     Echo.private(`like.${id}`)
+    //         .notification((notification) => {
+    //             setnewNotification(newNotification + 1);
+    //         });
+    // }, [newNotification, notifications]);
 
     return (
         <>
@@ -66,7 +72,7 @@ const App = () => {
             <Suspense fallback={<div>Loading...</div>}>
                 <TransitionGroup>
                     <CSSTransition
-                        key={currentKey}
+                        key={location.key}
                         classNames="fade"
                         timeout={300}
                     >

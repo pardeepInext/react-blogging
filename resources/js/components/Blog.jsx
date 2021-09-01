@@ -20,6 +20,11 @@ const Blog = (props) => {
             })
     }
 
+    const getText = (str) => {
+        str = str.split("</")[0].replace(/<[^>]*>/g, "");
+        return str.length > 100 ? `${str.substring(0, 100)}...` : str;
+    }
+
     return (
         <div className="col-12 mb-100">
             <article
@@ -37,7 +42,7 @@ const Blog = (props) => {
                         </li>
                         <li className="list-inline-item">
                             <i className="fas fa-tags me-2"></i>
-                            <span className="eta">{category.name}</span>
+                            <span className="eta">{category && category.name}</span>
                         </li>
                         <li className="list-inline-item">
                             {isLiking ? <i className="fas fa-spinner fa-spin me-2" style={{ color: 'red' }}></i> : <i className={`${isLike ? `fas fa-heart` : `far fa-heart`} me-2 `} style={{ color: 'red', cursor: 'pointer' }} onClick={toggleLike}></i>}
@@ -45,18 +50,15 @@ const Blog = (props) => {
                         </li>
                     </ul>
                     <h4 className="mb-4">
-                        <Link className="text-dark" to={`blog/${category.id}`}>
+                        <Link className="text-dark" to={`blog/${category && category.id}`}>
                             {title}
                         </Link>
                     </h4>
-                    <p className="mb-0 post-summary">
-                        {discription.length > 100
-                            ? `${discription.substring(0, 100)}....`
-                            : discription}
-                    </p>
+                    <div className="mb-0 post-summary" dangerouslySetInnerHTML={{ __html: getText(discription) }}>
+                    </div>
                     <Link
                         className="btn btn-transparent mb-4"
-                        to={`blog/${category.id}`}
+                        to={`blog/${id}`}
                     >
                         Continue...
                     </Link>

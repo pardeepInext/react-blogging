@@ -30,7 +30,6 @@ class BlogController extends Controller
             'discription' => 'required',
             'title' => 'required',
             'category_id' => 'required',
-            'img' => 'required'
         ]);
 
         if ($validator->fails()) return response(['success' => false, 'errors' => $validator->errors()]);

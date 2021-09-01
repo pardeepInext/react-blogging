@@ -1,80 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Block, Notify } from "notiflix";
-import axios from "../axios";
+import { Block } from "notiflix";
 import Blog from "../components/Blog";
 import Category from "../components/Category";
-import { useFetchBlog, useCustom } from "../APIHooks";
-
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchblogs, page } from '../slices/blogSlice';
 const Home = () => {
     Block.init({ svgColor: "#fd7e14" });
-    let id = JSON.parse(localStorage.getItem('user')).id;
-    const [data, setData] = useState({ currentPage: 1, lastPage: 1, isBlogFetch: false });
-    const [blogs, setblogs] = useState([]);
-    const categories = [
-        {
-            id: 1,
-            name: "Nature",
-            figure: "cat-01.jpg",
-        },
-        {
-            id: 2,
-            name: "Lifestyle",
-            figure: "cat-02.jpg",
-        },
-        {
-            id: 3,
-            name: "Artical",
-            figure: "cat-03.jpg",
-        },
-        {
-            id: 4,
-            name: "Fashion",
-            figure: "cat-04.jpg",
-        },
-        {
-            id: 5,
-            name: "Nature",
-            figure: "cat-05.jpg",
-        },
-        {
-            id: 6,
-            name: "Philosophy",
-            figure: "cat-06.jpg",
-        },
-        {
-            id: 7,
-            name: "Digital",
-            figure: "cat-07.jpg",
-        },
-    ];
-
-    const fetchPost = async () => {
-        setData({ ...data, isBlogFetch: true });
-        await axios.get(`/blogs?page=${data.currentPage}&current_user=${id}`)
-            .then(res => {
-                setblogs(res.data.data);
-                setData({ isBlogFetch: false, currentPage: res.data.current_page, lastPage: res.data.last_page })
-            })
-            .catch(err => {
-                setData({ isBlogFetch: false });
-                Notify.warning(`Blog API has errors ${err.message}`);
-            });
-
-    }
+    const blog = useSelector(state => state.blog);
+    const main = useSelector(state => state.main);
+    const category = useSelector(state => state.category)
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchPost();
-    }, [data.currentPage]);
+        dispatch(fetchblogs());
+    }, [blog.currentPage, dispatch]);
+
+    useEffect(() => {
+        blog.status == "loading" ? Block.arrows('.blog-listing') : Block.remove('.blog-listing');
+    }, [blog.status]);
+
 
     const Paginate = () => {
         const html = [];
-        for (let index = 1; index <= data.lastPage; index++)
+        for (let index = 1; index <= blog.lastPage; index++)
             html.push(
                 <li key={index} className="page-item">
                     <a
-                        className={`page-link ${data.currentPage == index ? "active" : ""
+                        className={`page-link ${blog.currentPage == index ? "active" : ""
                             }`}
-                        onClick={() => setData({ ...data, currentPage: index })}
+                        onClick={() => dispatch(page(index))}
                     >
                         {index}
                     </a>
@@ -89,7 +43,7 @@ const Home = () => {
             <div className="container-fluid p-sm-0 category" id="category">
                 <div className="content">
                     <div className="d-flex">
-                        {categories.map((category) => (
+                        {category.status == 'complete' && category.categories.map((category) => (
                             <Category key={category.id} {...category} />
                         ))}
                     </div>
@@ -97,8 +51,8 @@ const Home = () => {
             </div>
             <section className="section">
                 <div className="container">
-                    <div className="row blog-listing" id="blog-listing">
-                        {data.isBlogFetch ? "loading..." : blogs.map((blog, key) => (
+                    <div className="row blog-listing">
+                        {blog.blogs.length > 0 && blog.blogs.map((blog, key) => (
                             <Blog
                                 {...blog}
                                 key={blog.id}
