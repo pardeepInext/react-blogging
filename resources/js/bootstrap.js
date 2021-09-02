@@ -20,11 +20,6 @@ if (typeof token === "string") {
         key: process.env.MIX_PUSHER_APP_KEY,
         cluster: process.env.MIX_PUSHER_APP_CLUSTER,
         forceTLS: true,
-        // auth: {
-        //     headers: {
-        //         Authorization: 'Bearer ' + token
-        //     },
-        // }
         authorizer: (channel, options) => {
             return {
                 authorize: (socketId, callback) => {

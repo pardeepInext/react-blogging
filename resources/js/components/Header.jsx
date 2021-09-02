@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import "@fortawesome/fontawesome-free/css/all.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import logo from "../../images/logo.png";
-const Header = (props) => {
+import { useSelector } from 'react-redux';
+
+const Header = () => {
+
+    const [currentUser] = useState(localStorage.getItem('user'))
+    const isAuth = useSelector(state => state.user.isAuth);
+    const count = useSelector(state => state.notification.count);
+
     const [menus] = useState([
         {
             menuClass: "fas fa-home",
@@ -16,65 +22,73 @@ const Header = (props) => {
             menuClass: "fas fa-plus",
             link: "/add",
         },
+        {
+            menuClass: "fas fa-user",
+            link: '/profile'
+        }
     ]);
+
     return (
         <>
             <header className="navigation headroom headroom--pinned headroom--top">
                 <nav className="navbar navbar-expand-lg navbar-light">
-                    <a className="navbar-brand" href="index.html">
+                    <Link className="navbar-brand" to={'/'}>
                         <img className="img-fluid" src={logo} alt="parsa" />
-                    </a>
-                    <button
-                        className="navbar-toggler border-0"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navogation"
-                        aria-controls="navogation"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div
-                        className="collapse navbar-collapse text-center"
-                        id="navogation"
-                    >
-                        <ul className="navbar-nav ml-auto">
-                            {menus.map((menu, key) => (
-                                <li className="nav-item" key={key}>
-                                    <NavLink
-                                        className="nav-link text-uppercase text-dark"
-                                        exact
-                                        activeClassName="active"
-                                        to={menu.link}
-                                        style={{ fontSize: "2rem" }}
-                                    >
+                    </Link>
+                    {(currentUser || isAuth) && (
+                        <>
+                            <button
+                                className="navbar-toggler border-0"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#navogation"
+                                aria-controls="navogation"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation"
+                            >
+                                <span className="navbar-toggler-icon"></span>
+                            </button>
+                            <div
+                                className="collapse navbar-collapse text-center"
+                                id="navogation"
+                            >
+                                <ul className="navbar-nav ml-auto">
+                                    {menus.map((menu, key) => (
+                                        <li className="nav-item" key={key}>
+                                            <NavLink
+                                                className="nav-link text-uppercase text-dark"
+                                                exact
+                                                activeClassName="active"
+                                                to={menu.link}
+                                                style={{ fontSize: "2rem" }}
+                                            >
+                                                <i
+                                                    className={`${menu.menuClass} position-relative`}
+                                                >
+                                                    {menu.link == "/notification" && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info link-notification">
+                                                        {count > 0 && count}
+                                                    </span>}
+                                                </i>
+                                            </NavLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <form className="form-inline position-relative ml-lg-4">
+                                    <input
+                                        className="form-control px-0 w-100"
+                                        type="search"
+                                        placeholder="Search"
+                                    />
+                                    <a href="search.html" className="search-icon">
                                         <i
-                                            className={`${menu.menuClass} position-relative`}
-                                        >
-                                            {menu.link == "/notification" && <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info link-notification">
-                                                {props.unreadCount + props.newNotification}
-                                            </span>}
-                                        </i>
-                                    </NavLink>
-                                </li>
-                            ))}
-                        </ul>
-                        <form className="form-inline position-relative ml-lg-4">
-                            <input
-                                className="form-control px-0 w-100"
-                                type="search"
-                                placeholder="Search"
-                            />
-                            {/* <button class="search-icon" type="submit"><i class="ti-search text-dark"></i></button> */}
-                            <a href="search.html" className="search-icon">
-                                <i
-                                    className="fas fa-search text-dark"
-                                    style={{ color: "#ababab" }}
-                                ></i>
-                            </a>
-                        </form>
-                    </div>
+                                            className="fas fa-search text-dark"
+                                            style={{ color: "#ababab" }}
+                                        ></i>
+                                    </a>
+                                </form>
+                            </div>
+                        </>
+                    )}
                 </nav>
             </header>
         </>

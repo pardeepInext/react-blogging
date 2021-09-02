@@ -20,7 +20,7 @@ class AuthController extends Controller
         if ($validator->fails()) return response()->json(['success' => false, 'error' => $validator->errors()]);
 
         $user = User::where('email', $request->email)->first();
-        if (!$user) return response()->json(['success' => false, 'error' => ['email' => "This email is not matching with our record"]]);
+        if (!$user) return response()->json(['success' => false, 'error' => ['email' => "This email is not matching with our records"]]);
         if (!Hash::check($request->password, $user->password)) return response()->json(['success' => false, 'error' => ['password' => "Password is incorrect"]]);
         $reponse = $user;
         $reponse['token'] = $user->createToken($user->name)->plainTextToken;
@@ -31,7 +31,7 @@ class AuthController extends Controller
     function register(Request $request)
     {
         $validator = Validator::make($request->input(), [
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'name' => 'required',
             'password' => 'Required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/'
         ], ['password.regex' =>
@@ -55,7 +55,8 @@ class AuthController extends Controller
             return response()->json(['success' => true, 'user' => $user]);
         } else {
             $loginUser = User::create($request->only('name', 'image', 'email', 'provider_id'));
-            return response()->json(['success' => false, 'token' => $loginUser->createToken($loginUser->name)->plainTextToken, 'user' => $loginUser]);
+            $loginUser['token'] = $loginUser->createToken($loginUser->name)->plainTextToken;
+            return response()->json(['success' => false, 'user' => $loginUser]);
         }
     }
 }

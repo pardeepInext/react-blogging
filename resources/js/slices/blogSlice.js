@@ -33,6 +33,10 @@ const initialState = {
         isblogAdded: false,
         error: {},
         success: false,
+    },
+    blog: {
+        loading: false,
+        data: {},
     }
 }
 
@@ -48,6 +52,11 @@ export const insertBlog = createAsyncThunk('blog/insertBlog', async (blog) => {
     const response = await axios.post('blogs', formData);
     return response
 });
+
+export const fetchBlog = createAsyncThunk('blog/fetchblog', async (id) => {
+    const response = await axios.get(`blogs/${id}`);
+    return response;
+})
 
 export const blogSlice = createSlice({
     name: 'blog',
@@ -76,6 +85,13 @@ export const blogSlice = createSlice({
         [insertBlog.fulfilled]: (state, action) => {
             state.addBlog.isblogAdded = false;
             action.payload.data.success ? state.addBlog.success = true : state.addBlog.error = action.payload.data.errors;
+        },
+        [fetchBlog.pending]: (state) => {
+            state.blog.loading = true;
+        },
+        [fetchBlog.fulfilled]: (state, action) => {
+            state.blog.loading = false;
+            state.blog.data = action.payload.data;
         }
     }
 });

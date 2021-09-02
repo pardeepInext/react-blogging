@@ -3,6 +3,7 @@ import blogSlice from './slices/blogSlice';
 import mainSlice from './slices/mainSlice';
 import categorySlice from './slices/categorySlice';
 import userSlice from './slices/userSlice';
+import notificationSlice from './slices/notificationSlice';
 
 const store = configureStore({
     middleware: getDefaultMiddleware({
@@ -13,6 +14,7 @@ const store = configureStore({
         main: mainSlice,
         category: categorySlice,
         user: userSlice,
+        notification: notificationSlice,
     }
 })
 

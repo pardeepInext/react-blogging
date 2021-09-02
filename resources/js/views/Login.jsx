@@ -1,58 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { GoogleLogin } from "react-google-login";
+
 import { Link } from "react-router-dom";
-import axios from '../axios';
+
 import { useSelector, useDispatch } from 'react-redux';
+import { userLogin } from '../slices/userSlice';
 import { Notify } from 'notiflix';
+
 import AuthImage from '../components/AuthImage';
+import SocialLogin from '../components/SocialLogin';
+
 const Login = (props) => {
     const [isShow, setisShow] = useState(false);
     const [loginData, setloginData] = useState({ email: "", password: "" });
-    const [isLogin, setisLogin] = useState(false);
-    const [error, seterror] = useState({});
+
+    const dispatch = useDispatch();
     let history = useHistory();
-    const socialLogin = async (user) => {
-        setisLogin(true);
-        await axios.post(`socialauth`, user)
-            .then(res => {
-                setisLogin(false);
-                if (res.data.success) {
-                    localStorage.setItem('user', JSON.stringify(res.data.user));
-                    props.changeUser(JSON.stringify(res.data.user));
-                    history.push('/');
-                }
-            })
-            .catch(err => {
-                setisLogin(false);
-                console.log(err);
-            });
-    }
 
-    const responseGoogle = (e) => {
-        const user = {
-            name: e.profileObj.name, image: e.profileObj.imageUrl, email: e.profileObj.email
-            , provider_id: e.profileObj.googleId
-        };
-        socialLogin(user)
-    };
+    const login = useSelector(state => state.user.login);
+    const isAuth = useSelector(state => state.user.isAuth);
 
+    useEffect(() => {
+        if (isAuth) history.push('/');
+    });
 
-
-    const login = async () => {
-        setisLogin(true);
-        await axios.post(`login`, loginData)
-            .then(res => {
-                setisLogin(false);
-                if (res.data.success) {
-                    localStorage.setItem('user', JSON.stringify(res.data.user));
-                    history.go('/');
-                } else seterror(res.data.error);
-            })
-            .catch(err => {
-                setisLogin(false);
-            })
-    };
     return (
         <div className="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto">
             <div className="card card0 border-0">
@@ -60,30 +31,7 @@ const Login = (props) => {
                     <AuthImage />
                     <div className="col-lg-6">
                         <div className="card2 card border-0 px-4 py-5">
-                            <div className="row mb-4 px-3">
-                                <h6 className="mb-0 mr-4 mt-2">Sign in with</h6>
-                                <GoogleLogin
-                                    clientId="524551911775-7mui0ta4pbe4tnnfelrofid55suc1im5.apps.googleusercontent.com"
-                                    buttonText="Login"
-                                    render={(renderProps) => (
-                                        <button
-                                            onClick={renderProps.onClick}
-                                            className="facebook text-center me-3"
-                                            disabled={isLogin}
-                                        >
-                                            {isLogin ? <i className="fas fa-spinner fa-spin"></i> : <i className="fab fa-google"></i>}
-                                        </button>
-                                    )}
-                                    onSuccess={responseGoogle}
-                                    onFailure={responseGoogle}
-                                    cookiePolicy={"single_host_origin"}
-                                />
-                            </div>
-                            <div className="row px-3 mb-4">
-                                <div className="line" />
-                                <small className="or text-center">Or</small>
-                                <div className="line" />
-                            </div>
+                            <SocialLogin />
                             <div className="row px-3 mb-4">
                                 <label className="mb-1">
                                     <h6 className="mb-0 text-sm">
@@ -102,7 +50,7 @@ const Login = (props) => {
                                         })
                                     }
                                 />
-                                {error.email ? <span className="fw-bold text-danger">{error.email}</span> : ""}
+                                {login.error.email && <span className="fw-bold text-danger">{login.error.email}</span>}
                             </div>
                             <div className="row px-3">
                                 <label className="mb-1">
@@ -120,7 +68,7 @@ const Login = (props) => {
                                         })
                                     }
                                 />
-                                {error.password ? <span className="fw-bold text-danger">{error.password}</span> : ""}
+                                {login.error.password && <span className="fw-bold text-danger">{login.error.password}</span>}
                             </div>
                             <div className="row px-3 mb-4">
                                 <a
@@ -138,11 +86,11 @@ const Login = (props) => {
                             <div className="row mb-3 px-3">
                                 <button
                                     type="button"
-                                    className="btn btn-blue text-center"
-                                    onClick={login}
-                                    disabled={isLogin}
+                                    className="btn btn-blue btn-primary text-center"
+                                    disabled={login.loading}
+                                    onClick={() => dispatch(userLogin(loginData))}
                                 >
-                                    {isLogin ? <i className="fas fa-spinner fa-spin"></i> : "Login"}
+                                    {login.loading ? <i className="fas fa-spinner fa-spin"></i> : "Login"}
                                 </button>
                             </div>
                             <div className="row mb-4 px-3">

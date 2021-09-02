@@ -9,7 +9,8 @@ const initialState = {
 export const fetchCategory = createAsyncThunk('category/fetchCategory', async () => {
     const response = await axios.get('categories');
     return response;
-})
+});
+
 export const categorySlice = createSlice({
     name: 'category',
     initialState,

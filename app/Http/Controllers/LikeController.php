@@ -23,10 +23,12 @@ class LikeController extends Controller
         $user = User::select('id', 'name', 'image')->find($request->user_id);
 
         if ($validator->fails()) return response(['success' => false, 'errors' => $validator->errors()]);
+
         $like = Like::where('blog_id', $request->blog_id)->first();
 
         $response = $like ? $like->update(['is_liked' => !$like->is_liked]) : Like::create($request->only('user_id', 'blog_id'));
-        User::find($blog->user_id)->notify(new LikeNotification(['user' => $user, 'blog' => $blog]));
+
+        if (gettype($response) == 'object' || $like->is_liked) User::find($blog->user_id)->notify(new LikeNotification(['user' => $user, 'blog' => $blog]));
 
         $likesCount = Like::where([['blog_id', '=', $request->blog_id], ['is_liked', '=', true]])->count();
 

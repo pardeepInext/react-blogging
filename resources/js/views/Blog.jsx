@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { Block } from "notiflix";
-import axios from "../axios";
 import RelatedPost from "../components/RelatedPost";
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchBlog } from '../slices/blogSlice';
+
 const Blog = () => {
-    const [blog, setblog] = useState({});
     const { id } = useParams();
-    const fetchBlog = async () => {
-        Block.arrows("#blog-details");
-        await axios.get(`/blogs/${id}`).then((res) => {
-            setblog(res.data);
-            Block.remove("#blog-details");
-        });
-    };
+
+    const blog = useSelector(state => state.blog.blog.data);
+    const loading = useSelector(state => state.blog.blog.loading);
+    const dispatch = useDispatch();
+    console.log("hello")
+    useEffect(() => {
+        loading ? Block.arrows(".blog-details") : Block.remove(".blog-details");
+    }, [loading]);
 
     useEffect(() => {
-        fetchBlog();
-    }, [id]);
+        dispatch(fetchBlog(id));
+    }, []);
 
     return (
         <>
@@ -30,7 +32,7 @@ const Blog = () => {
                 </div>
             </section>
             <section>
-                <div className="container" id="blog-details">
+                <div className="container blog-details">
                     <div className="row">
                         <div className="col-lg-8">
                             <ul className="list-inline d-flex justify-content-between py-3">

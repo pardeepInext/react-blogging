@@ -312,7 +312,7 @@ var Home = function Home() {
   var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_4__.useDispatch)();
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     dispatch((0,_slices_blogSlice__WEBPACK_IMPORTED_MODULE_5__.fetchblogs)());
-  }, [blog.currentPage, dispatch]);
+  }, [blog.currentPage]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     blog.status == "loading" ? notiflix__WEBPACK_IMPORTED_MODULE_1__.Block.arrows('.blog-listing') : notiflix__WEBPACK_IMPORTED_MODULE_1__.Block.remove('.blog-listing');
   }, [blog.status]);

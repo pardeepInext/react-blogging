@@ -13,12 +13,11 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(fetchblogs());
-    }, [blog.currentPage, dispatch]);
+    }, [blog.currentPage]);
 
     useEffect(() => {
         blog.status == "loading" ? Block.arrows('.blog-listing') : Block.remove('.blog-listing');
     }, [blog.status]);
-
 
     const Paginate = () => {
         const html = [];
