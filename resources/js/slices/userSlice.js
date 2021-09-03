@@ -16,6 +16,7 @@ const initialState = {
     },
     isAuth: false,
     currentUser: {},
+    // id: localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).id == 'null' ? currentUser.id : JSON.parse(localStorage.getItem('user')).id,
 }
 
 export const userLogin = createAsyncThunk('user/userLogin', async (args) => {

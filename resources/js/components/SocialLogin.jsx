@@ -11,7 +11,7 @@ const SocialLogin = () => {
             name: e.profileObj.name, image: e.profileObj.imageUrl, email: e.profileObj.email
             , provider_id: e.profileObj.googleId
         };
-
+        console.log(e);
         dispatch(socialAuth(user));
     };
 

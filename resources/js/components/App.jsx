@@ -29,10 +29,7 @@ const App = () => {
     const [currentUser] = useState(localStorage.getItem('user'))
     const isAuth = useSelector(state => state.user.isAuth);
     const user = useSelector(state => state.user.currentUser);
-
     /* changing title for routes */
-
-    let id = localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).id;
     useEffect(() => {
         document.title = titleCase(location.pathname);
         scrollTo(0, 0);
@@ -43,7 +40,7 @@ const App = () => {
         if (currentUser || isAuth) dispatch(fetchNotification());
 
         if (isAuth || currentUser) {
-            id = currentUser == null ? user.id : JSON.parse(currentUser).id;
+            const id = currentUser == null ? user.id : JSON.parse(currentUser).id;
             Echo.private(`like.${id}`)
                 .notification((notification) => {
                     dispatch(liveCount(1));
@@ -52,8 +49,6 @@ const App = () => {
         }
 
     }, [isAuth]);
-
-
 
     return (
         <>

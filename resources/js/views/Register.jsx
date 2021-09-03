@@ -19,7 +19,7 @@ const Register = (props) => {
     });
 
     useEffect(() => {
-        if (isAuth) history.push('/');
+        if (isAuth) window.location.href = "/";
     });
 
 

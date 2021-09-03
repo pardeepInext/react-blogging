@@ -21,7 +21,7 @@ const Login = (props) => {
     const isAuth = useSelector(state => state.user.isAuth);
 
     useEffect(() => {
-        if (isAuth) history.push('/');
+        if (isAuth) window.location.href = "/";
     });
 
     return (

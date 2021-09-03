@@ -28,6 +28,7 @@
         "axios": "^0.21.1",
         "cropperjs": "^1.5.12",
         "history": "^5.0.1",
+        "jsx-to-string": "^1.4.0",
         "laravel-echo": "^1.11.1",
         "moment": "^2.29.1",
         "notiflix": "^3.0.1",
